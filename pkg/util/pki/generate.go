@@ -19,6 +19,7 @@ package pki
 import (
 	"crypto"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/rsa"
@@ -44,6 +45,9 @@ const (
 	ECCurve384 = 384
 	// ECCurve521 represents a secp521r1 / NIST P-521 ECDSA key.
 	ECCurve521 = 521
+
+	// Ed25519
+	Ed25519		= 25519
 )
 
 // GeneratePrivateKeyForCertificate will generate a private key suitable for
@@ -122,6 +126,8 @@ func EncodePrivateKey(pk crypto.PrivateKey, keyEncoding v1.PrivateKeyEncoding) (
 			return EncodePKCS1PrivateKey(k), nil
 		case *ecdsa.PrivateKey:
 			return EncodeECPrivateKey(k)
+		case *ed25519.PrivateKey:
+			return EncodePKCS8PrivateKey(k)
 		default:
 			return nil, fmt.Errorf("error encoding private key: unknown key type: %T", pk)
 		}
