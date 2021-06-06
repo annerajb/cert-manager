@@ -53,7 +53,7 @@ type CertificateList struct {
 	Items []Certificate `json:"items"`
 }
 
-// +kubebuilder:validation:Enum=RSA;ECDSA
+// +kubebuilder:validation:Enum=RSA;ECDSA;Ed25519
 type PrivateKeyAlgorithm string
 
 const (
@@ -62,6 +62,9 @@ const (
 
 	// Denotes the ECDSA private key type.
 	ECDSAKeyAlgorithm PrivateKeyAlgorithm = "ECDSA"
+
+	// Denotes the Ed25519 private key type.
+	Ed25519KeyAlgorithm PrivateKeyAlgorithm = "Ed25519"
 )
 
 // +kubebuilder:validation:Enum=PKCS1;PKCS8
