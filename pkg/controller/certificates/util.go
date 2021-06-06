@@ -18,6 +18,7 @@ package certificates
 
 import (
 	"crypto"
+	"crypto/ed25519"
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"fmt"
@@ -44,6 +45,8 @@ func PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec) ([]
 	switch spec.PrivateKey.Algorithm {
 	case "", cmapi.RSAKeyAlgorithm:
 		return rsaPrivateKeyMatchesSpec(pk, spec)
+	case cmapi.ED25519KeyAlgorithm:
+		return ed25519PrivateKeyMatchesSpec(pk, spec)
 	case cmapi.ECDSAKeyAlgorithm:
 		return ecdsaPrivateKeyMatchesSpec(pk, spec)
 	default:
@@ -84,6 +87,27 @@ func ecdsaPrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec
 	//  from older versions.
 	// The default EC curve type is EC256
 	expectedKeySize := pki.ECCurve256
+	if spec.PrivateKey.Size > 0 {
+		expectedKeySize = spec.PrivateKey.Size
+	}
+	if expectedKeySize != ecdsaPk.Curve.Params().BitSize {
+		violations = append(violations, "spec.keySize")
+	}
+	return violations, nil
+}
+
+func ed25519PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec) ([]string, error) {
+	ecdsaPk, ok := pk.(*ed25519.PrivateKey)
+	if !ok {
+		return []string{"spec.keyAlgorithm"}, nil
+	}
+	var violations []string
+	// TODO: we should not use implicit defaulting here, and instead rely on
+	//  defaulting performed within the Kubernetes apiserver here.
+	//  This requires careful handling in order to not interrupt users upgrading
+	//  from older versions.
+	// The default EC curve type is EC256
+	expectedKeySize := pki.
 	if spec.PrivateKey.Size > 0 {
 		expectedKeySize = spec.PrivateKey.Size
 	}
