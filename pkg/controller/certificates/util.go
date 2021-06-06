@@ -18,8 +18,8 @@ package certificates
 
 import (
 	"crypto"
-	"crypto/ed25519"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/rsa"
 	"fmt"
 	"reflect"
@@ -35,7 +35,7 @@ import (
 )
 
 // PrivateKeyMatchesSpec returns an error if the private key bit size
-// doesn't match the provided spec. Both RSA and ECDSA are supported.
+// doesn't match the provided spec. RSA, Ed25519 and ECDSA are supported.
 // If any error is returned, a list of violations will also be returned.
 func PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec) ([]string, error) {
 	spec = *spec.DeepCopy()
@@ -45,7 +45,7 @@ func PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec) ([]
 	switch spec.PrivateKey.Algorithm {
 	case "", cmapi.RSAKeyAlgorithm:
 		return rsaPrivateKeyMatchesSpec(pk, spec)
-	case cmapi.ED25519KeyAlgorithm:
+	case cmapi.Ed25519KeyAlgorithm:
 		return ed25519PrivateKeyMatchesSpec(pk, spec)
 	case cmapi.ECDSAKeyAlgorithm:
 		return ecdsaPrivateKeyMatchesSpec(pk, spec)
@@ -97,7 +97,7 @@ func ecdsaPrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec
 }
 
 func ed25519PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSpec) ([]string, error) {
-	ecdsaPk, ok := pk.(*ed25519.PrivateKey)
+	_, ok := pk.(ed25519.PrivateKey)
 	if !ok {
 		return []string{"spec.keyAlgorithm"}, nil
 	}
@@ -106,14 +106,14 @@ func ed25519PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSp
 	//  defaulting performed within the Kubernetes apiserver here.
 	//  This requires careful handling in order to not interrupt users upgrading
 	//  from older versions.
-	// The default EC curve type is EC256
-	expectedKeySize := pki.
-	if spec.PrivateKey.Size > 0 {
-		expectedKeySize = spec.PrivateKey.Size
-	}
-	if expectedKeySize != ecdsaPk.Curve.Params().BitSize {
-		violations = append(violations, "spec.keySize")
-	}
+	// The default Ed is 25519
+	// expectedKeySize := pki.Ed25519
+	// if spec.PrivateKey.Size > 0 {
+	// 	expectedKeySize = spec.PrivateKey.Size
+	// }
+	// if expectedKeySize != ed25519pk.Public() {
+	// 	violations = append(violations, "spec.keySize")
+	// }
 	return violations, nil
 }
 

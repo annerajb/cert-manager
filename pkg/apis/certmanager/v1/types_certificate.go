@@ -209,10 +209,11 @@ type CertificatePrivateKey struct {
 	Encoding PrivateKeyEncoding `json:"encoding,omitempty"`
 
 	// Algorithm is the private key algorithm of the corresponding private key
-	// for this certificate. If provided, allowed values are either `RSA` or `ECDSA`
+	// for this certificate. If provided, allowed values are either `RSA`,`Ed25519` or `ECDSA`
 	// If `algorithm` is specified and `size` is not provided,
 	// key size of 256 will be used for `ECDSA` key algorithm and
 	// key size of 2048 will be used for `RSA` key algorithm.
+	// key size of 25519 will be used for `Ed25519` key algorithm.
 	// +optional
 	Algorithm PrivateKeyAlgorithm `json:"algorithm,omitempty"`
 
@@ -221,6 +222,8 @@ type CertificatePrivateKey struct {
 	// and will default to `2048` if not specified.
 	// If `algorithm` is set to `ECDSA`, valid values are `256`, `384` or `521`,
 	// and will default to `256` if not specified.
+	// If `algorithm` is set to `Ed25519`, valid values are `25519`,
+	// and will default to `25519` if not specified.
 	// No other values are allowed.
 	// +optional
 	Size int `json:"size,omitempty"` // Validated by webhook. Be mindful of adding OpenAPI validation- see https://github.com/jetstack/cert-manager/issues/3644
