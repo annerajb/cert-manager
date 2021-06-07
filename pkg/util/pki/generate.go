@@ -45,9 +45,6 @@ const (
 	ECCurve384 = 384
 	// ECCurve521 represents a secp521r1 / NIST P-521 ECDSA key.
 	ECCurve521 = 521
-
-	// Ed25519
-	Ed25519 = 25519
 )
 
 // GeneratePrivateKeyForCertificate will generate a private key suitable for
@@ -77,13 +74,7 @@ func GeneratePrivateKeyForCertificate(crt *v1.Certificate) (crypto.Signer, error
 
 		return GenerateECPrivateKey(keySize)
 	case v1.Ed25519KeyAlgorithm:
-		keySize := Ed25519
-
-		if crt.Spec.PrivateKey.Size > 0 {
-			keySize = crt.Spec.PrivateKey.Size
-		}
-
-		return GenerateEdPrivateKey(keySize)
+		return GenerateEdPrivateKey()
 	default:
 		return nil, fmt.Errorf("unsupported private key algorithm specified: %s", crt.Spec.PrivateKey.Algorithm)
 	}
@@ -123,16 +114,12 @@ func GenerateECPrivateKey(keySize int) (*ecdsa.PrivateKey, error) {
 	return ecdsa.GenerateKey(ecCurve, rand.Reader)
 }
 
-// GenerateEdPrivateKey will generate an EdDsa private key of the given size.
-// It can be used to generate only 25519
-func GenerateEdPrivateKey(keySize int) (*ed25519.PrivateKey, error) {
+// GenerateEdPrivateKey will generate an Ed25519 private key
+func GenerateEdPrivateKey() (ed25519.PrivateKey, error) {
 
-	if keySize != Ed25519 {
-		return nil, fmt.Errorf("unsupported EdDsa key size specified only 25519: %d", keySize)
-	}
 	_, prvkey, err := ed25519.GenerateKey(rand.Reader)
 
-	return &prvkey, err
+	return prvkey, err
 }
 
 // EncodePrivateKey will encode a given crypto.PrivateKey by first inspecting
@@ -152,12 +139,7 @@ func EncodePrivateKey(pk crypto.PrivateKey, keyEncoding v1.PrivateKeyEncoding) (
 			return nil, fmt.Errorf("error encoding private key: unknown key type: %T", pk)
 		}
 	case v1.PKCS8:
-		switch k := pk.(type) {
-		case *ed25519.PrivateKey:
-			return EncodePKCS8PrivateKey(*k)
-		default:
-			return EncodePKCS8PrivateKey(pk)
-		}
+		return EncodePKCS8PrivateKey(pk)
 	default:
 		return nil, fmt.Errorf("error encoding private key: unknown key encoding: %s", keyEncoding)
 	}

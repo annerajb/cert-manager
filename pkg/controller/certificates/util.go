@@ -102,18 +102,6 @@ func ed25519PrivateKeyMatchesSpec(pk crypto.PrivateKey, spec cmapi.CertificateSp
 		return []string{"spec.keyAlgorithm"}, nil
 	}
 	var violations []string
-	// TODO: we should not use implicit defaulting here, and instead rely on
-	//  defaulting performed within the Kubernetes apiserver here.
-	//  This requires careful handling in order to not interrupt users upgrading
-	//  from older versions.
-	// The default Ed is 25519
-	// expectedKeySize := pki.Ed25519
-	// if spec.PrivateKey.Size > 0 {
-	// 	expectedKeySize = spec.PrivateKey.Size
-	// }
-	// if expectedKeySize != ed25519pk.Public() {
-	// 	violations = append(violations, "spec.keySize")
-	// }
 	return violations, nil
 }
 
