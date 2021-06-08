@@ -117,7 +117,7 @@ func (h *Helper) ValidateIssuedCertificate(certificate *cmapi.Certificate, rootC
 		return nil, err
 	}
 
-	// validate private key is of the correct type (rsa,ed25519 or ecdsa)
+	// validate private key is of the correct type (rsa, ed25519 or ecdsa)
 	privateKey := certificate.Spec.PrivateKey
 	if privateKey == nil {
 		privateKey = &cmapi.CertificatePrivateKey{}
