@@ -48,7 +48,7 @@ func mustGenerateECDSA(t *testing.T, keySize int) crypto.PrivateKey {
 }
 
 func mustGenerateEd25519(t *testing.T) crypto.PrivateKey {
-	pk, err := pki.GenerateEdPrivateKey()
+	pk, err := pki.GenerateEd25519PrivateKey()
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -74,7 +74,7 @@ func GeneratePrivateKeyForCertificate(crt *v1.Certificate) (crypto.Signer, error
 
 		return GenerateECPrivateKey(keySize)
 	case v1.Ed25519KeyAlgorithm:
-		return GenerateEdPrivateKey()
+		return GenerateEd25519PrivateKey()
 	default:
 		return nil, fmt.Errorf("unsupported private key algorithm specified: %s", crt.Spec.PrivateKey.Algorithm)
 	}
@@ -114,8 +114,8 @@ func GenerateECPrivateKey(keySize int) (*ecdsa.PrivateKey, error) {
 	return ecdsa.GenerateKey(ecCurve, rand.Reader)
 }
 
-// GenerateEdPrivateKey will generate an Ed25519 private key
-func GenerateEdPrivateKey() (ed25519.PrivateKey, error) {
+// GenerateEd25519PrivateKey will generate an Ed25519 private key
+func GenerateEd25519PrivateKey() (ed25519.PrivateKey, error) {
 
 	_, prvkey, err := ed25519.GenerateKey(rand.Reader)
 

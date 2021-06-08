@@ -47,7 +47,7 @@ func CSR(keyAlgorithm x509.PublicKeyAlgorithm, mods ...CSRModifier) (csr []byte,
 		}
 		signatureAlgorithm = x509.ECDSAWithSHA256
 	case x509.Ed25519:
-		sk, err = pki.GenerateEdPrivateKey()
+		sk, err = pki.GenerateEd25519PrivateKey()
 		if err != nil {
 			return nil, nil, err
 		}
