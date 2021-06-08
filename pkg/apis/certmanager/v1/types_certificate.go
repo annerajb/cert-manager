@@ -213,7 +213,7 @@ type CertificatePrivateKey struct {
 	// If `algorithm` is specified and `size` is not provided,
 	// key size of 256 will be used for `ECDSA` key algorithm and
 	// key size of 2048 will be used for `RSA` key algorithm.
-	// key size of 25519 will be used for `Ed25519` key algorithm.
+	// key size is ignored when using the `Ed25519` key algorithm.
 	// +optional
 	Algorithm PrivateKeyAlgorithm `json:"algorithm,omitempty"`
 
