@@ -222,8 +222,7 @@ type CertificatePrivateKey struct {
 	// and will default to `2048` if not specified.
 	// If `algorithm` is set to `ECDSA`, valid values are `256`, `384` or `521`,
 	// and will default to `256` if not specified.
-	// If `algorithm` is set to `Ed25519`, valid values are `25519`,
-	// and will default to `25519` if not specified.
+	// If `algorithm` is set to `Ed25519`, Size is ignored.
 	// No other values are allowed.
 	// +optional
 	Size int `json:"size,omitempty"` // Validated by webhook. Be mindful of adding OpenAPI validation- see https://github.com/jetstack/cert-manager/issues/3644
