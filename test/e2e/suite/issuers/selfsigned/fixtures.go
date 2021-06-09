@@ -124,7 +124,7 @@ func generateECCSR() ([]byte, error) {
 	return csr, nil
 }
 
-func generateEd25519Csr() ([]byte, error) {
+func generateEd25519CSR() ([]byte, error) {
 	csr, err := generateCSR(rootEd25519Signer, x509.PureEd25519)
 	if err != nil {
 		return nil, err

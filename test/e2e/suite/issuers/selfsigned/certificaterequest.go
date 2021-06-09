@@ -133,7 +133,7 @@ var _ = framework.CertManagerDescribe("SelfSigned CertificateRequest", func() {
 
 			crClient := f.CertManagerClientSet.CertmanagerV1().CertificateRequests(f.Namespace.Name)
 			By("Creating a CertificateRequest")
-			csr, err := generateEd25519Csr()
+			csr, err := generateEd25519CSR()
 			Expect(err).NotTo(HaveOccurred())
 
 			_, err = crClient.Create(context.TODO(), gen.CertificateRequestFrom(basicCR,
@@ -154,7 +154,7 @@ var _ = framework.CertManagerDescribe("SelfSigned CertificateRequest", func() {
 
 			crClient := f.CertManagerClientSet.CertmanagerV1().CertificateRequests(f.Namespace.Name)
 			By("Creating a CertificateRequest")
-			csr, err := generateEd25519Csr()
+			csr, err := generateEd25519CSR()
 			Expect(err).NotTo(HaveOccurred())
 
 			_, err = crClient.Create(context.TODO(), gen.CertificateRequestFrom(basicCR,
@@ -175,7 +175,7 @@ var _ = framework.CertManagerDescribe("SelfSigned CertificateRequest", func() {
 
 			crClient := f.CertManagerClientSet.CertmanagerV1().CertificateRequests(f.Namespace.Name)
 			By("Creating a CertificateRequest")
-			csr, err := generateEd25519Csr()
+			csr, err := generateEd25519CSR()
 			Expect(err).NotTo(HaveOccurred())
 
 			_, err = crClient.Create(context.TODO(), gen.CertificateRequestFrom(basicCR,
